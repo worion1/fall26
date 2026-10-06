@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Time Tracker</title>
+</head>
+<body>
+<script>
+function App(initialRows) {
+  'use strict';
+
+  var CSS = [
+    ':root{',
+    '  color-scheme: light;',
+    '  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;',
+    '  --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);',
+    '  --series-mech:#2a78d6; --series-conc:#eb6834; --accent:#2a78d6; --danger:#d03b3b;',
+    '}',
+    '@media (prefers-color-scheme: dark){',
+    '  :root:not([data-theme="light"]){',
+    '    color-scheme: dark;',
+    '    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;',
+    '    --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);',
+    '    --series-mech:#3987e5; --series-conc:#d95926; --accent:#3987e5; --danger:#e66767;',
+    '  }',
+    '}',
+    ':root[data-theme="dark"]{',
+    '  color-scheme: dark;',
+    '  --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;',
+    '  --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);',
+    '  --series-mech:#3987e5; --series-conc:#d95926; --accent:#3987e5; --danger:#e66767;',
+    '}',
+    '*{box-sizing:border-box;}',
+    'html,body{margin:0;padding:0;}',
+    'body{background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}',
+    '.page{max-width:760px;margin:0 auto;padding:32px 20px 64px;}',
+    '.topbar{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap;}',
+    '.topbar h1{font-size:20px;font-weight:600;margin:0;}',
+    '.subtitle{margin:2px 0 0;color:var(--ink-2);font-size:13px;}',
+    '.save-status{font-size:12px;color:var(--muted);}',
+    '.save-status.status-error{color:var(--danger);}',
+    '.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}',
+    '.week-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px;}',
+    '.nav-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}',
+    '.nav-btn:hover:not(:disabled){background:var(--grid);}',
+    '.nav-btn:disabled{opacity:.35;cursor:default;}',
+    '.week-label{font-size:14px;font-weight:600;color:var(--ink);min-width:220px;text-align:center;font-variant-numeric:tabular-nums;}',
+    '.view-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:16px;}',
+    '.toggle-btn{padding:6px 14px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--ink-2);font-size:13px;cursor:pointer;font-family:inherit;}',
+    '.toggle-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}',
+    '.chart-wrap{position:relative;}',
+    '.chart{width:100%;height:auto;display:block;}',
+    '.axis-label{font-size:10px;fill:var(--muted);font-variant-numeric:tabular-nums;}',
+    '.total-label{font-size:11px;font-weight:600;fill:var(--ink);}',
+    '.class-label{font-size:11px;fill:var(--ink-2);}',
+    '.bar-class-label{font-size:9px;fill:var(--muted);}',
+    '.seg{transition:opacity .1s ease;}',
+    '.bar-group{outline:none;cursor:pointer;}',
+    '.bar-group:hover .seg,.bar-group:focus .seg,.bar-group:focus-visible .seg{opacity:.82;}',
+    '.tooltip{position:absolute;pointer-events:none;background:var(--ink);color:var(--page);border-radius:8px;padding:8px 10px;font-size:12px;min-width:140px;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:5;}',
+    '.tip-title{font-weight:600;margin-bottom:4px;}',
+    '.tip-row{display:flex;align-items:center;gap:6px;padding:2px 0;}',
+    '.tip-key{width:8px;height:8px;border-radius:2px;flex:none;}',
+    '.tip-name{flex:1;opacity:.85;}',
+    '.tip-val{font-weight:600;font-variant-numeric:tabular-nums;}',
+    '.tip-total{border-top:1px solid rgba(255,255,255,.2);margin-top:4px;padding-top:4px;}',
+    '.legend{display:flex;gap:16px;justify-content:center;margin-top:16px;}',
+    '.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);}',
+    '.legend-swatch{width:10px;height:10px;border-radius:3px;}',
+    '.empty-note{color:var(--ink-2);font-size:13px;text-align:center;padding:24px 0;}',
+    '.class-order-hint{margin:8px 0 0;font-size:11px;color:var(--muted);text-align:center;}',
+    '.table-wrap{overflow-x:auto;}',
+    '.data-table{width:100%;border-collapse:collapse;font-size:13px;}',
+    '.data-table th,.data-table td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--grid);}',
+    '.data-table th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}',
+    '.data-table td{font-variant-numeric:tabular-nums;}',
+    'details.manage{padding:0;}',
+    'details.manage summary{padding:16px 20px;cursor:pointer;font-size:14px;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px;}',
+    'details.manage summary::-webkit-details-marker{display:none;}',
+    'details.manage summary::before{content:"▸";color:var(--muted);font-size:11px;transition:transform .15s;display:inline-block;}',
+    'details.manage[open] summary::before{transform:rotate(90deg);}',
+    '.manage-body{padding:0 20px 20px;}',
+    '.hint{font-size:12px;color:var(--ink-2);line-height:1.5;margin:0 0 14px;}',
+    '.hint code{background:var(--grid);padding:1px 5px;border-radius:4px;font-size:11px;}',
+    '.manage-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}',
+    '.file-btn,.ghost-btn,.primary-btn{font-family:inherit;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--border);}',
+    '.file-btn{background:var(--accent);color:#fff;border-color:var(--accent);display:inline-block;}',
+    '.ghost-btn{background:transparent;color:var(--ink-2);}',
+    '.ghost-btn:hover{background:var(--grid);}',
+    '.primary-btn{background:var(--accent);color:#fff;border-color:var(--accent);}',
+    '.area-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;}',
+    '.csv-area{width:100%;min-height:120px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--page);color:var(--ink);resize:vertical;margin-bottom:12px;}',
+    '.warnings{font-size:12px;color:var(--danger);}',
+    'button:focus-visible,.toggle-btn:focus-visible,.nav-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}',
+    '@media (max-width:480px){.week-label{min-width:0;font-size:13px;}}'
+  ].join('\n');
+
+  var BODY_SKELETON = [
+    '<div class="page">',
+    '  <header class="topbar">',
+    '    <div class="title-group">',
+    '      <h1>Study Time Tracker</h1>',
+    '      <p class="subtitle">Mechanical vs. conceptual time per class</p>',
+    '    </div>',
+    '    <div class="save-status" id="saveStatus" aria-live="polite"></div>',
+    '  </header>',
+    '  <section class="card">',
+    '    <div class="week-nav">',
+    '      <button id="prevWeek" class="nav-btn" type="button" aria-label="Previous week">‹</button>',
+    '      <div class="week-label" id="weekLabel">—</div>',
+    '      <button id="nextWeek" class="nav-btn" type="button" aria-label="Next week">›</button>',
+    '    </div>',
+    '    <div class="view-toggle" role="group" aria-label="View">',
+    '      <button id="chartViewBtn" class="toggle-btn active" type="button">Chart</button>',
+    '      <button id="tableViewBtn" class="toggle-btn" type="button">Table</button>',
+    '    </div>',
+    '    <div id="chartWrap" class="chart-wrap">',
+    '      <svg id="chart" class="chart" role="img" aria-label="Stacked bar chart of study time by class"></svg>',
+    '      <div id="tooltip" class="tooltip" hidden></div>',
+    '    </div>',
+    '    <div id="tableWrap" class="table-wrap" hidden>',
+    '      <table id="dataTable" class="data-table"></table>',
+    '    </div>',
+    '    <div class="legend" id="legend"></div>',
+    '    <p class="class-order-hint" id="classOrderHint"></p>',
+    '    <p class="empty-note" id="emptyNote" hidden>No study log loaded yet. Load a CSV file or paste your log below to get started.</p>',
+    '  </section>',
+    '  <details class="manage card">',
+    '    <summary>Manage data</summary>',
+    '    <div class="manage-body">',
+    '      <p class="hint">CSV columns: <code>date, day, class, type, minutes</code>. The <code>type</code> column must be exactly <strong>mechanical</strong> or <strong>conceptual</strong> (case-insensitive) to be counted &mdash; other values are ignored.</p>',
+    '      <div class="manage-row">',
+    '        <label class="file-btn">Load CSV file<input type="file" id="fileInput" accept=".csv,text/csv" hidden></label>',
+    '        <button id="sampleBtn" class="ghost-btn" type="button">Load sample data</button>',
+    '      </div>',
+    '      <label class="area-label" for="csvArea">Raw CSV (edit directly, then Apply)</label>',
+    '      <textarea id="csvArea" class="csv-area" spellcheck="false"></textarea>',
+    '      <div class="manage-row">',
+    '        <button id="applyBtn" class="primary-btn" type="button">Apply changes</button>',
+    '        <span id="warnings" class="warnings" aria-live="polite"></span>',
+    '      </div>',
+    '      <p class="hint">To embed this in Obsidian, export a static snapshot below, save it into your vault, and embed it with a plugin like Local HTML Embed (see chat for setup).</p>',
+    '      <div class="manage-row">',
+    '        <button id="exportBtn" class="ghost-btn" type="button">Export snapshot for Obsidian</button>',
+    '        <span id="exportStatus" class="warnings" aria-live="polite"></span>',
+    '      </div>',
+    '    </div>',
+    '  </details>',
+    '</div>'
+  ].join('\n');
+
+  // ---------- bootstrap ----------
+  if (!document.getElementById('app-style')) {
+    var styleEl = document.createElement('style');
+    styleEl.id = 'app-style';
+    styleEl.textContent = CSS;
+    document.head.appendChild(styleEl);
+  }
+  document.title = 'Study Time Tracker';
+  document.body.innerHTML = BODY_SKELETON;
+
+  var MECH = 'mechanical', CONC = 'conceptual';
+  var SERIES = [
+    { key: MECH, label: 'Mechanical', cssVar: '--series-mech' },
+    { key: CONC, label: 'Conceptual', cssVar: '--series-conc' }
+  ];
+
+  var state = {
+    rows: Array.isArray(initialRows) ? initialRows.slice() : [],
+    weekIndex: 0,
+    view: 'chart'
+  };
+
+  // ---------- helpers ----------
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  function parseDate(str) {
+    if (!str) return null;
+    str = String(str).trim();
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(str);
+    if (m) return new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2]));
+    var d = new Date(str);
+    return isNaN(d) ? null : d;
+  }
+
+  function isoDate(d) {
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  function weekStartOf(d) {
+    var ws = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    ws.setDate(ws.getDate() - ws.getDay());
+    return ws;
+  }
+
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function shortDate(d) { return (d.getMonth() + 1) + '/' + d.getDate(); }
+
+  function daysOfWeek(ws) {
+    var out = [];
+    for (var i = 0; i < 7; i++) { var d = new Date(ws); d.setDate(d.getDate() + i); out.push(d); }
+    return out;
+  }
+
+  function formatWeekLabel(ws) {
+    var we = new Date(ws); we.setDate(we.getDate() + 6);
+    var sameMonth = ws.getMonth() === we.getMonth();
+    var startStr = MONTHS[ws.getMonth()] + ' ' + ws.getDate();
+    var endStr = (sameMonth ? '' : MONTHS[we.getMonth()] + ' ') + we.getDate();
+    return startStr + '–' + endStr;
+  }
+
+  function formatMinutes(m) {
+    m = Math.round(m);
+    if (m <= 0) return '0m';
+    var h = Math.floor(m / 60), r = m % 60;
+    if (h && r) return h + 'h ' + r + 'm';
+    if (h) return h + 'h';
+    return r + 'm';
+  }
+
+  // ---------- CSV ----------
+  function splitCsvLine(line) {
+    var out = [], cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (inQ) {
+        if (c === '"') { if (line[i+1] === '"') { cur += '"'; i++; } else { inQ = false; } }
+        else cur += c;
+      } else {
+        if (c === '"') inQ = true;
+        else if (c === ',') { out.push(cur); cur = ''; }
+        else cur += c;
+      }
+    }
+    out.push(cur);
+    return out.map(function (s) { return s.trim(); });
+  }
+
+  function parseCSV(text) {
+    var rows = [];
+    var lines = String(text).replace(/\r\n?/g, '\n').split('\n').filter(function (l) { return l.trim().length; });
+    if (!lines.length) return { rows: rows, warnings: [] };
+    var header = splitCsvLine(lines[0]).map(function (h) { return h.toLowerCase(); });
+    var idx = {
+      date: header.indexOf('date'), day: header.indexOf('day'),
+      class: header.indexOf('class'), type: header.indexOf('type'),
+      minutes: header.indexOf('minutes')
+    };
+    var warnings = [];
+    if (idx.date === -1 || idx.class === -1 || idx.type === -1 || idx.minutes === -1) {
+      warnings.push('CSV header must include date, class, type, and minutes columns.');
+      return { rows: rows, warnings: warnings };
+    }
+    var unknownTypes = {};
+    for (var i = 1; i < lines.length; i++) {
+      var cols = splitCsvLine(lines[i]);
+      if (cols.every(function (c) { return c === ''; })) continue;
+      var d = parseDate(cols[idx.date]);
+      var cls = (cols[idx.class] || '').trim();
+      var typeRaw = (cols[idx.type] || '').trim();
+      var type = typeRaw.toLowerCase();
+      var minutes = Number(cols[idx.minutes]);
+      if (!d || !cls || !isFinite(minutes)) {
+        warnings.push('Skipped row ' + (i + 1) + ' (missing/invalid date, class, or minutes).');
+        continue;
+      }
+      if (type !== MECH && type !== CONC) {
+        unknownTypes[typeRaw || '(blank)'] = true;
+        continue;
+      }
+      rows.push({ date: isoDate(d), day: (cols[idx.day] || '').trim(), class: cls, type: type, minutes: minutes });
+    }
+    var unk = Object.keys(unknownTypes);
+    if (unk.length) {
+      warnings.push('Ignored rows with unrecognized type value(s): ' + unk.join(', ') + ' — only "mechanical" and "conceptual" are counted.');
+    }
+    return { rows: rows, warnings: warnings };
+  }
+
+  function rowsToCSV(rows) {
+    var header = 'date,day,class,type,minutes';
+    var lines = rows.map(function (r) {
+      return [r.date, r.day, r.class, r.type, r.minutes].map(function (v) {
+        v = String(v == null ? '' : v);
+        return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+      }).join(',');
+    });
+    return [header].concat(lines).join('\n');
+  }
+
+  // ---------- derived data ----------
+  function computeWeeks(rows) {
+    var map = {}, order = [];
+    rows.forEach(function (r) {
+      var d = parseDate(r.date);
+      if (!d) return;
+      var ws = weekStartOf(d);
+      var key = isoDate(ws);
+      if (!map[key]) { map[key] = ws; order.push(key); }
+    });
+    return order.map(function (k) { return map[k]; }).sort(function (a, b) { return a - b; });
+  }
+
+  function computeClasses(rows) {
+    var seen = {}, out = [];
+    rows.forEach(function (r) { if (!seen[r.class]) { seen[r.class] = true; out.push(r.class); } });
+    return out.sort(function (a, b) { return a.localeCompare(b); });
+  }
+
+  function rowsInWeek(rows, ws) {
+    var we = new Date(ws); we.setDate(we.getDate() + 7);
+    return rows.filter(function (r) {
+      var d = parseDate(r.date);
+      return d && d >= ws && d < we;
+    });
+  }
+
+  function totalsFor(rows, classes) {
+    var out = {};
+    classes.forEach(function (c) { out[c] = { mechanical: 0, conceptual: 0, total: 0 }; });
+    rows.forEach(function (r) {
+      if (!out[r.class]) return;
+      out[r.class][r.type] += r.minutes;
+      out[r.class].total += r.minutes;
+    });
+    return out;
+  }
+
+  function globalMax(rows, classes, weeks) {
+    var max = 0;
+    weeks.forEach(function (ws) {
+      var t = totalsFor(rowsInWeek(rows, ws), classes);
+      classes.forEach(function (c) { if (t[c].total > max) max = t[c].total; });
+    });
+    return max;
+  }
+
+  function dayClassTotals(rows, days, classes) {
+    var isoByIndex = days.map(isoDate);
+    var out = days.map(function () {
+      var o = {};
+      classes.forEach(function (c) { o[c] = { mechanical: 0, conceptual: 0, total: 0 }; });
+      return o;
+    });
+    rows.forEach(function (r) {
+      var idx = isoByIndex.indexOf(r.date);
+      if (idx === -1 || !out[idx][r.class]) return;
+      out[idx][r.class][r.type] += r.minutes;
+      out[idx][r.class].total += r.minutes;
+    });
+    return out;
+  }
+
+  function globalMaxDay(rows, classes, weeks) {
+    var max = 0;
+    weeks.forEach(function (ws) {
+      var dct = dayClassTotals(rows, daysOfWeek(ws), classes);
+      dct.forEach(function (dayObj) {
+        classes.forEach(function (c) { if (dayObj[c].total > max) max = dayObj[c].total; });
+      });
+    });
+    return max;
+  }
+
+  function niceStep(max) {
+    var steps = [15,30,60,90,120,150,180,240,300,360,420,480,600,720];
+    for (var i = 0; i < steps.length; i++) { if (max <= steps[i] * 4) return steps[i]; }
+    return Math.ceil(max / 4 / 60) * 60;
+  }
+
+  // ---------- DOM refs ----------
+  var els = {};
+  ['prevWeek','nextWeek','weekLabel','chartViewBtn','tableViewBtn','chartWrap','chart','tooltip',
+   'tableWrap','dataTable','legend','emptyNote','fileInput','sampleBtn','csvArea','applyBtn',
+   'warnings','saveStatus','exportBtn','exportStatus','classOrderHint'].forEach(function (id) { els[id] = document.getElementById(id); });
+
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs) {
+    var e = document.createElementNS(SVG_NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  function roundedTopPath(x, y, w, h, r) {
+    if (h <= 0) return '';
+    r = Math.min(r, w / 2, h);
+    if (r <= 0) return 'M' + x + ',' + (y+h) + ' L' + x + ',' + y + ' L' + (x+w) + ',' + y + ' L' + (x+w) + ',' + (y+h) + ' Z';
+    return 'M' + x + ',' + (y+h) +
+      ' L' + x + ',' + (y+r) +
+      ' Q' + x + ',' + y + ' ' + (x+r) + ',' + y +
+      ' L' + (x+w-r) + ',' + y +
+      ' Q' + (x+w) + ',' + y + ' ' + (x+w) + ',' + (y+r) +
+      ' L' + (x+w) + ',' + (y+h) + ' Z';
+  }
+
+  // ---------- render ----------
+  function render() {
+    var rows = state.rows;
+    var weeks = computeWeeks(rows);
+    var classes = computeClasses(rows);
+
+    if (!weeks.length || !classes.length) {
+      els.emptyNote.hidden = false;
+      els.chartWrap.hidden = true;
+      els.tableWrap.hidden = true;
+      els.legend.innerHTML = '';
+      els.classOrderHint.textContent = '';
+      els.weekLabel.textContent = '—';
+      els.prevWeek.disabled = true;
+      els.nextWeek.disabled = true;
+      updateCsvArea();
+      return;
+    }
+    els.emptyNote.hidden = true;
+
+    if (state.weekIndex >= weeks.length) state.weekIndex = weeks.length - 1;
+    if (state.weekIndex < 0) state.weekIndex = 0;
+    var ws = weeks[state.weekIndex];
+
+    els.weekLabel.textContent = formatWeekLabel(ws) + '  ·  Week ' + (state.weekIndex + 1) + ' of ' + weeks.length;
+    els.prevWeek.disabled = state.weekIndex === 0;
+    els.nextWeek.disabled = state.weekIndex === weeks.length - 1;
+
+    var days = daysOfWeek(ws);
+    var dct = dayClassTotals(rows, days, classes);
+    var max = globalMaxDay(rows, classes, weeks);
+    var step = niceStep(max || 30);
+    var niceMax = step * 4;
+
+    drawChart(classes, days, dct, niceMax, step);
+    drawTable(classes, days, dct);
+    drawLegend();
+    els.classOrderHint.textContent = classes.length > 1 ? 'Bars within each day, left to right: ' + classes.join(' · ') : '';
+
+    els.chartWrap.hidden = state.view !== 'chart';
+    els.tableWrap.hidden = state.view !== 'table';
+
+    updateCsvArea();
+  }
+
+  function drawLegend() {
+    els.legend.innerHTML = '';
+    SERIES.forEach(function (s) {
+      var item = document.createElement('span');
+      item.className = 'legend-item';
+      var sw = document.createElement('span');
+      sw.className = 'legend-swatch';
+      sw.style.background = 'var(' + s.cssVar + ')';
+      item.appendChild(sw);
+      var label = document.createElement('span');
+      label.textContent = s.label;
+      item.appendChild(label);
+      els.legend.appendChild(item);
+    });
+  }
+
+  function drawTable(classes, days, dct) {
+    var table = els.dataTable;
+    table.innerHTML = '';
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    var thClass = document.createElement('th'); thClass.textContent = 'Class'; hr.appendChild(thClass);
+    days.forEach(function (day, i) {
+      var th = document.createElement('th');
+      th.textContent = DOW[i] + ' ' + shortDate(day);
+      hr.appendChild(th);
+    });
+    var thTotal = document.createElement('th'); thTotal.textContent = 'Week total'; hr.appendChild(thTotal);
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    classes.forEach(function (c) {
+      var tr = document.createElement('tr');
+      var tdClass = document.createElement('td'); tdClass.textContent = c; tr.appendChild(tdClass);
+      var weekTotal = 0;
+      dct.forEach(function (dayObj) {
+        var t = dayObj[c];
+        weekTotal += t.total;
+        var td = document.createElement('td');
+        td.textContent = t.total > 0 ? formatMinutes(t.total) : '—';
+        tr.appendChild(td);
+      });
+      var tdTotal = document.createElement('td');
+      tdTotal.textContent = formatMinutes(weekTotal);
+      tdTotal.style.fontWeight = '600';
+      tr.appendChild(tdTotal);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  function drawChart(classes, days, dct, niceMax, step) {
+    var svg = els.chart;
+    svg.innerHTML = '';
+
+    var CLASS_FONT = 9, DAY_FONT = 11;
+    var charW = CLASS_FONT * 0.58;
+    var maxLabelLen = classes.reduce(function (m, c) { return Math.max(m, c.length * charW); }, 0);
+    var classLabelBand = Math.min(100, Math.max(20, maxLabelLen));
+    var classLabelGap = 6, dayLabelGap = 8;
+
+    var W = 720, plotH = 250;
+    var marginLeft = 46, marginRight = 16, marginTop = 28;
+    var marginBottom = classLabelGap + classLabelBand + dayLabelGap + DAY_FONT + 8;
+    var H = marginTop + plotH + marginBottom;
+    var plotW = W - marginLeft - marginRight;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    function yFor(v) { return marginTop + plotH - (v / niceMax) * plotH; }
+
+    var ticksGroup = svgEl('g', {});
+    for (var v = 0; v <= niceMax; v += step) {
+      var y = yFor(v);
+      ticksGroup.appendChild(svgEl('line', { x1: marginLeft, x2: W - marginRight, y1: y, y2: y, stroke: 'var(--grid)', 'stroke-width': 1 }));
+      var label = svgEl('text', { x: marginLeft - 8, y: y + 4, 'text-anchor': 'end', class: 'axis-label' });
+      label.textContent = formatMinutes(v);
+      ticksGroup.appendChild(label);
+    }
+    svg.appendChild(ticksGroup);
+
+    var yBase = yFor(0);
+    svg.appendChild(svgEl('line', { x1: marginLeft, x2: W - marginRight, y1: yBase, y2: yBase, stroke: 'var(--baseline)', 'stroke-width': 1 }));
+
+    var nDays = days.length;
+    var band = plotW / nDays;
+    var nClasses = classes.length || 1;
+    var inset = band * 0.09;
+    var usable = band - inset * 2;
+    var subBand = usable / nClasses;
+    var barW = Math.max(3, Math.min(24, subBand * 0.62));
+    var GAP = 2;
+
+    days.forEach(function (day, di) {
+      var bandStart = marginLeft + band * di;
+      var dayObj = dct[di];
+      var dayLabel = DOW[di] + ' ' + shortDate(day);
+
+      classes.forEach(function (c, ci) {
+        var t = dayObj[c];
+        var cx = bandStart + inset + subBand * ci + subBand / 2;
+        var x0 = cx - barW / 2;
+        var mech = t.mechanical, conc = t.conceptual;
+        var yMechTop = yFor(mech);
+        var yStackTop = yFor(mech + conc);
+
+        var group = svgEl('g', {
+          class: 'bar-group', tabindex: '0', role: 'img',
+          'aria-label': dayLabel + ', ' + c + ': mechanical ' + formatMinutes(mech) + ', conceptual ' + formatMinutes(conc) + ', total ' + formatMinutes(mech + conc)
+        });
+
+        if (mech > 0 && conc > 0) {
+          group.appendChild(svgEl('rect', { x: x0, y: yMechTop, width: barW, height: Math.max(yBase - yMechTop, 0), fill: 'var(--series-mech)', class: 'seg' }));
+          var top = yStackTop, bottom = yMechTop - GAP;
+          group.appendChild(svgEl('path', { d: roundedTopPath(x0, top, barW, Math.max(bottom - top, 0), 4), fill: 'var(--series-conc)', class: 'seg' }));
+        } else if (mech > 0) {
+          group.appendChild(svgEl('path', { d: roundedTopPath(x0, yMechTop, barW, yBase - yMechTop, 4), fill: 'var(--series-mech)', class: 'seg' }));
+        } else if (conc > 0) {
+          group.appendChild(svgEl('path', { d: roundedTopPath(x0, yStackTop, barW, yBase - yStackTop, 4), fill: 'var(--series-conc)', class: 'seg' }));
+        }
+
+        var hit = svgEl('rect', { x: x0 - 3, y: marginTop, width: barW + 6, height: plotH, fill: 'transparent' });
+        group.appendChild(hit);
+
+        var labelY = yBase + classLabelGap;
+        var lbl = svgEl('text', {
+          x: cx, y: labelY, 'text-anchor': 'start',
+          transform: 'rotate(90 ' + cx + ' ' + labelY + ')',
+          class: 'bar-class-label'
+        });
+        lbl.textContent = c;
+        group.appendChild(lbl);
+
+        group.addEventListener('pointermove', function (e) { showTooltip(e, dayLabel, c, mech, conc); });
+        group.addEventListener('pointerleave', hideTooltip);
+        group.addEventListener('focus', function (e) { showTooltip(e, dayLabel, c, mech, conc); });
+        group.addEventListener('blur', hideTooltip);
+
+        svg.appendChild(group);
+      });
+
+      var dayLabelY = yBase + classLabelGap + classLabelBand + dayLabelGap + DAY_FONT * 0.8;
+      var dl = svgEl('text', { x: bandStart + band / 2, y: dayLabelY, 'text-anchor': 'middle', class: 'class-label' });
+      dl.textContent = DOW[di];
+      svg.appendChild(dl);
+    });
+  }
+
+  function showTooltip(evt, dayLabel, cls, mech, conc) {
+    var tip = els.tooltip;
+    tip.innerHTML = '';
+    var title = document.createElement('div');
+    title.className = 'tip-title';
+    title.textContent = dayLabel + ' · ' + cls;
+    tip.appendChild(title);
+    SERIES.forEach(function (s) {
+      var row = document.createElement('div');
+      row.className = 'tip-row';
+      var key = document.createElement('span');
+      key.className = 'tip-key';
+      key.style.background = 'var(' + s.cssVar + ')';
+      row.appendChild(key);
+      var name = document.createElement('span');
+      name.className = 'tip-name';
+      name.textContent = s.label;
+      row.appendChild(name);
+      var val = document.createElement('span');
+      val.className = 'tip-val';
+      val.textContent = formatMinutes(s.key === MECH ? mech : conc);
+      row.appendChild(val);
+      tip.appendChild(row);
+    });
+    var totalRow = document.createElement('div');
+    totalRow.className = 'tip-row tip-total';
+    var totalName = document.createElement('span'); totalName.className = 'tip-name'; totalName.textContent = 'Total';
+    var totalVal = document.createElement('span'); totalVal.className = 'tip-val'; totalVal.textContent = formatMinutes(mech + conc);
+    totalRow.appendChild(totalName); totalRow.appendChild(totalVal);
+    tip.appendChild(totalRow);
+
+    tip.hidden = false;
+    var wrapRect = els.chartWrap.getBoundingClientRect();
+    var cx = (evt.clientX != null ? evt.clientX : wrapRect.left) - wrapRect.left;
+    var cy = (evt.clientY != null ? evt.clientY : wrapRect.top) - wrapRect.top;
+    tip.style.left = Math.max(Math.min(cx + 12, wrapRect.width - 160), 0) + 'px';
+    tip.style.top = Math.max(cy - 12, 0) + 'px';
+  }
+  function hideTooltip() { els.tooltip.hidden = true; }
+
+  function updateCsvArea() {
+    if (document.activeElement !== els.csvArea) {
+      els.csvArea.value = rowsToCSV(state.rows);
+    }
+  }
+
+  // ---------- persistence ----------
+  function setStatus(text, isError) {
+    els.saveStatus.textContent = text;
+    els.saveStatus.classList.toggle('status-error', !!isError);
+  }
+
+  function buildFullDocument(rows) {
+    var json = JSON.stringify(rows).replace(/<\/script/gi, '<\\/script');
+    return '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<title>Study Time Tracker</title>\n</head>\n<body>\n<script>\n(' +
+      App.toString() + ')(' + json + ');\n<' + '/script>\n</body>\n</html>';
+  }
+
+  async function persist() {
+    setStatus('Saving…');
+    var api = null;
+    try {
+      if (window.claude && typeof window.claude.use === 'function') {
+        api = await window.claude.use('artifact');
+      }
+    } catch (e) { api = null; }
+
+    if (!api) {
+      try { localStorage.setItem('study-tracker-rows', JSON.stringify(state.rows)); } catch (e) {}
+      setStatus('Saved on this device');
+      return;
+    }
+    try {
+      await api.publish(buildFullDocument(state.rows));
+      setStatus('Saved');
+    } catch (err) {
+      if (err && err.code === 'conflict') { return; }
+      try { localStorage.setItem('study-tracker-rows', JSON.stringify(state.rows)); } catch (e) {}
+      if (err && (err.code === 'not_writer' || err.code === 'not_granted')) {
+        setStatus('Read-only here — saved on this device only', true);
+      } else {
+        setStatus('Could not save to the page — kept on this device', true);
+      }
+    }
+  }
+
+  function commitRows(newRows, warnings) {
+    state.rows = newRows;
+    var weeks = computeWeeks(state.rows);
+    state.weekIndex = weeks.length ? weeks.length - 1 : 0;
+    els.warnings.textContent = (warnings && warnings.length) ? warnings.join(' ') : '';
+    render();
+    persist();
+  }
+
+  // ---------- events ----------
+  els.prevWeek.addEventListener('click', function () { state.weekIndex--; render(); });
+  els.nextWeek.addEventListener('click', function () { state.weekIndex++; render(); });
+
+  els.chartViewBtn.addEventListener('click', function () {
+    state.view = 'chart';
+    els.chartViewBtn.classList.add('active');
+    els.tableViewBtn.classList.remove('active');
+    render();
+  });
+  els.tableViewBtn.addEventListener('click', function () {
+    state.view = 'table';
+    els.tableViewBtn.classList.add('active');
+    els.chartViewBtn.classList.remove('active');
+    render();
+  });
+
+  els.fileInput.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var res = parseCSV(String(reader.result));
+      commitRows(res.rows, res.warnings);
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  els.applyBtn.addEventListener('click', function () {
+    var res = parseCSV(els.csvArea.value);
+    commitRows(res.rows, res.warnings);
+  });
+
+  els.exportBtn.addEventListener('click', async function () {
+    els.exportStatus.textContent = '';
+    var api = null;
+    try {
+      if (window.claude && typeof window.claude.use === 'function') {
+        api = await window.claude.use('downloads');
+      }
+    } catch (e) { api = null; }
+    if (!api) {
+      els.exportStatus.textContent = 'Export isn\'t available in this view.';
+      return;
+    }
+    try {
+      await api.save({ filename: 'study-tracker.html', data: buildFullDocument(state.rows) });
+      els.exportStatus.textContent = 'Downloaded — move it into your vault and embed it.';
+    } catch (err) {
+      if (err && err.code === 'declined') { return; }
+      if (err && err.code === 'extension_not_enabled') {
+        els.exportStatus.textContent = 'HTML downloads aren\'t enabled in this view.';
+      } else {
+        els.exportStatus.textContent = 'Could not export: ' + (err && err.message ? err.message : 'unknown error');
+      }
+    }
+  });
+
+  els.sampleBtn.addEventListener('click', function () {
+    var sample = [
+      { date: '2026-08-25', day: 'Tue', class: 'CS 101', type: 'mechanical', minutes: 45 },
+      { date: '2026-08-25', day: 'Tue', class: 'CS 101', type: 'conceptual', minutes: 20 },
+      { date: '2026-08-26', day: 'Wed', class: 'Math 201', type: 'mechanical', minutes: 30 },
+      { date: '2026-08-27', day: 'Thu', class: 'Math 201', type: 'conceptual', minutes: 40 },
+      { date: '2026-08-27', day: 'Thu', class: 'Physics 150', type: 'mechanical', minutes: 25 },
+      { date: '2026-09-01', day: 'Tue', class: 'CS 101', type: 'mechanical', minutes: 60 },
+      { date: '2026-09-02', day: 'Wed', class: 'CS 101', type: 'conceptual', minutes: 15 },
+      { date: '2026-09-03', day: 'Thu', class: 'Math 201', type: 'mechanical', minutes: 50 },
+      { date: '2026-09-03', day: 'Thu', class: 'Physics 150', type: 'conceptual', minutes: 35 }
+    ];
+    commitRows(sample, ['Loaded sample data — replace with your own log any time.']);
+  });
+
+  // ---------- init ----------
+  (function init() {
+    if (!state.rows.length) {
+      try {
+        var stored = localStorage.getItem('study-tracker-rows');
+        if (stored) state.rows = JSON.parse(stored);
+      } catch (e) {}
+    }
+    var weeks = computeWeeks(state.rows);
+    state.weekIndex = weeks.length ? weeks.length - 1 : 0;
+    render();
+  })();
+}
+
+App([]);
+</script>
+</body>
+</html>
