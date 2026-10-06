@@ -1,3 +1,13 @@
 .obsidian/workspace.json
 .obsidian/plugins/obsidian-git/state.json
 .trash/
+
+# Exclude all pasted images
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Exclude a specific HTML file
+study_tracker_standalone_1
+study_tracker_standalone_1.html
