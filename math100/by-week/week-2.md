@@ -1,0 +1,1 @@
+## Negation of Universal and Existential Quantifiers

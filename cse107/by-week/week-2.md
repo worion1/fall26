@@ -31,7 +31,22 @@ Also, $\set{I_A =1} = A$ and $\set{I_A = 0} = A^c$.
 Indicators can also be used to implicitly define the support of $X$ when included as a factor of the PMF of $X$ e.g.
 $$p_X(x) = \left(\frac{x}{10}\right) I_{x \in \set{1,2,3,4}} \\ \downarrow \\ p_X(x) >0 \iff I_{x \in \set{1,2,3,4}}=1 \iff x=1,2,3,4 \\ \downarrow \\ S_X = \set{1,2,3,4}$$
 Here, the indicator is not a function of an outcome $\omega$, but of a real variable $x$. 
-## Cumulative Distribution Function
+## Cumulative Distribution Function (CDF)
 ---
+The definition of the CDF is very similar to the PMF except that, instead of return the probability of a random variable $X$ at a single real value $x$, it returns a cumulative probability of $X$ up to a real value $t$:
+$$F_X(t) = P(X \le t),\space t \in \mathbb{R}$$
+Then if $X$ is a discrete random variable, the only contributions to the cumulative probability come from discrete "spikes", or values in the support of $X$ with $p_X(x) >0$. For any choice of $t$, we can choose a subset of $S_X$ to pass into the PMF and sum:
+$$F_X(t) = \sum_{x \le t} p_X(x)$$
+While the PMF handles the space between $x$ values belonging to $S_X$ by outputting $0$, the CDF maintains a running total of the probability up to $t$ and, therefore, must be piecewise defined where $F_X(t) =0$ before the first discrete contribution and be nondecreasing.
 
+Consider the following table listing the probabilities in the PMF of a discrete random variable $X$:
 
+| $x$      | 0             | 1             | 2             | 3             |
+| -------- | ------------- | ------------- | ------------- | ------------- |
+| $p_X(x)$ | $\frac{1}{4}$ | $\frac{1}{4}$ | $\frac{1}{4}$ | $\frac{1}{4}$ |
+It should be clear that $F_X(0)=P(X \le 0)\equiv P(X=0)=p_X(0)=\frac{1}{4}$ since $0$ is the only value in the interval $(-\infty, 0]$ that contributes to the probability of $X \le 0$. Likewise, if we are asked $F_X(1.5)=P(X \le 1.5)$, even though $1.5$ is not in the support of $X$, we simply imagine contributions of $0$ for the interval $(1,1.5)$ and keep moving backward toward nonzero contributions. Thus, $F_X(1.5)=\frac{2}{4}$.
+
+We can actually plot this CDF by adhering to the piecewise definition and using the support values of $X$ to note where the "spikes", or nonzero probability contributions, occur.
+![[Pasted image 20261009100033.png|center|475]]
+## Bernoulli Trails/Distribution
+---
