@@ -1,0 +1,9 @@
+{
+  "enabledCssSnippets": [
+    "center-table",
+    "center-image"
+  ],
+  "cssTheme": "Jotter",
+  "theme": "moonstone",
+  "accentColor": "#454545"
+}
