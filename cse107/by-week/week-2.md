@@ -16,7 +16,7 @@ $$p_X(x) = P(X = x)$$
 where $x$ is a specific value taken by $X$. In plain words, this is simply a function that outputs the probability that the random variable is equal to some number $x$. 
 
 The values of $x$ that result in a strictly positive $p_X$ belong to the *support* of $X$, defined as 
-$S_X=\set{x : p_X(x) >0}$. For example, if $X$ records the the face value of a rolled die ($X(\omega) = \omega$), then the support of $X$ is $S_X = \set{1,2,3,4,5,6}$. Notice here that a value $x = 1.5$ would be assigned a probability of $0$ by the PMF and thus not belong to $S_X$.
+$S_X=\set{x : p_X(x) >0}$. For example, if $X$ records the face value of a rolled die ($X(\omega) = \omega$), then the support of $X$ is $S_X = \set{1,2,3,4,5,6}$. Notice here that a value $x = 1.5$ would be assigned a probability of $0$ by the PMF and thus not belong to $S_X$.
 
 Because $p_X$ is a probability function on $X$, it must retain properties of probability that we are familiar with:
 $$p_X(x) \ge 0, \space \sum_{x \in S_X} p_X(x) = 1$$
@@ -33,10 +33,10 @@ $$p_X(x) = \left(\frac{x}{10}\right) I_{x \in \set{1,2,3,4}} \\ \downarrow \\ p_
 Here, the indicator is not a function of an outcome $\omega$, but of a real variable $x$. 
 ## Cumulative Distribution Function (CDF)
 ---
-The definition of the CDF is very similar to the PMF except that, instead of return the probability of a random variable $X$ at a single real value $x$, it returns a cumulative probability of $X$ up to a real value $t$:
+The definition of the CDF is very similar to the PMF except that, instead of returning the probability of a random variable $X$ at a single real value $x$, it returns a cumulative probability of $X$ up to a real value $t$:
 $$F_X(t) = P(X \le t),\space t \in \mathbb{R}$$
-Then if $X$ is a discrete random variable, the only contributions to the cumulative probability come from discrete "spikes", or values in the support of $X$ with $p_X(x) >0$. For any choice of $t$, we can choose a subset of $S_X$ to pass into the PMF and sum:
-$$F_X(t) = \sum_{x \le t} p_X(x)$$
+Then if $X$ is a discrete random variable, the only contributions to the cumulative probability come from jumps/steps, or values in the support of $X$ with $p_X(x) >0$. For any choice of $t$, we can choose a subset of $S_X$ to pass into the PMF and sum:
+$$F_X(t) = \sum_{x \in S_X,\space x \le t} p_X(x)$$
 While the PMF handles the space between $x$ values belonging to $S_X$ by outputting $0$, the CDF maintains a running total of the probability up to $t$ and, therefore, must be piecewise defined where $F_X(t) =0$ before the first discrete contribution and be nondecreasing.
 
 Consider the following table listing the probabilities in the PMF of a discrete random variable $X$:
@@ -48,5 +48,40 @@ It should be clear that $F_X(0)=P(X \le 0)\equiv P(X=0)=p_X(0)=\frac{1}{4}$ sinc
 
 We can actually plot this CDF by adhering to the piecewise definition and using the support values of $X$ to note where the "spikes", or nonzero probability contributions, occur.
 ![[Pasted image 20261009100033.png|center|475]]
-## Bernoulli Trails/Distribution
+
+### $P(X)$ Over a Finite & Half-Open Interval
+If we want to find the probability of a random variable over a finite and half-open interval, specifically $a < X \le b$, we can use $P(a < X \le b) = F_X(b) - F_X(a)$. 
+
+Note that we can rewrite the event $X \le b$ as a disjoint union: 
+$$\set{X \le b} = \set{X \le a} \cup \set{a < X \le b}$$
+Noting that this is indeed a disjoint union, we can invoke the additivity axiom:
+$$ P(X \le b) = P(X \le a) + P(a < X \le b)$$
+Recall that $P(X \le k)$ for some $k \in \mathbb{R}$ is precisely the definition of the CDF:
+$$F_X(b) = F_X(a) + P(a < X \le b)$$
+Finally we have,
+$$P(a < X \le b) = F_X(b) - F_X(a)$$
+## Bernoulli Trials
 ---
+The introduction of Bernoulli trials and the Bernoulli distribution serves as motivation for the Binomial Distribution. 
+
+We first define a Bernoulli trial as a binary random variable, capable of outputting the value $1$ if the outcome of an experiment is a "success" and the value $0$ if it is a "failure" (or other analogous terms). Thus, the $i$th Bernoulli trial is denoted:
+$$I_i = \begin{cases} 1,& \text{success}, \\ 0,& \text{failure}.\end{cases}$$
+If each $i$th trial has probability $p$ of occurring (that is, $P(A_i) = p$ because a trial is an indicator), then we know that, for each trial, its probability follows the a PMF:
+$$p_{I_i}(u) = pI_{\set{u=1}} + (1-p)I_{\set{u=0}}$$
+where $u$ is a value that $I_i$ takes on, indicating either success (1) or failure (0). In this case, we say that Bernoulli trial $I_i$ follows a Bernoulli distribution with success parameter $p$, or: $I_i \sim \text{Bern}(p)$.
+## Binomial Distribution
+___
+If we assume these trials to be *mutually independent* (each trial is independent of *every* other trial), we can use the multiplication rule to write:
+$$P(I_1=i_i, \ldots, I_n=i_n) = p_{I_1} (i_1) \cdot \ldots \cdot p_{I_n}(i_n)=\prod^n_{j=1}P(I_j = i_j),\space\space i_j \in \set{0,1}$$
+Consider the specific pattern of four Bernoulli trails shown below:
+![[Pasted image 20261012143920.png]]
+where $S$ denotes "success" and $F$ denotes "failure", with respective probabilities $p$ and $1-p$.
+
+Applying the multiplication rule to these (assumed) mutually independent trails, we find:
+$$p(1-p)\cdot p(1-p)=p^2(1-p)^2$$
+Generalizing this to a specific pattern of $n$ Bernoulli trials containing $k$ successes:
+$$\text{pattern probability } = p^k(1-p)^{n-k}$$
+Now let $X$ be a random variable that counts the number successes ($k$) in $n$ Bernoulli trials. If we want to define a PMF for $X$, observe the statement $P(X=k)$. Here, we are asking for the probability that there are $k$ successes in a given pattern. It may seem intuitive to say $P(X=k) = \text{pattern probability}$ for some pattern with $k$ successes, however, because $k$ successes can appear in a variety of arrangements of $n$ trials (e.g. $SFS \ne FSS$ despite $k=2$), we need to count the total number of arrangements. We can do this by imagining that we are assigning $k$ successes to $n$ trials awaiting an assignment (where any trial not assigned a success is instead assigned a failure). More importantly, realize that we are choosing *position indices*, that is, we are choosing $k$ position indices from $n$ total. Thus, we know that we can count the total number ways to get $k$ successes as $\binom{n}{k}$. Since the total number of successes/failures for any of these $\binom{n}{k}$ mutually independent patterns is identical, their pattern probabilities are also identical. Invoking the additivity axiom tells us that the probability of getting $k$ successes is just the sum of all of the $\binom{n}{k}$ patterns and repeated addition of the same term is simply multiplication, thus we have:
+$$p_X(k) = \binom{n}{k} p^k (1-p)^{n-k} I_{\set{k \in \set{0, \ldots, n}}}$$
+where the indicator is used to ensure $k$ is a valid selection of number of successes.
+___

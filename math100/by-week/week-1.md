@@ -17,5 +17,3 @@ From the truth table, we can see that the logical conjunction's truth values acc
 ... Same can be done for $\lor$.
 
 ---
-## Implication Statements
-

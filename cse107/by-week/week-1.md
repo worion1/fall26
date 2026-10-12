@@ -96,4 +96,3 @@ Notice that the main utility of this theorem is to be able to work backwards fro
 We can further reason through this theorem by looking at what the numerators and denominators are really saying. The numerator is saying "What is the probability of a flight being delayed and it being sunny?", while the denominator is saying "How likely is the flight to be delayed under any weather?". Together they say "What is the probability of a flight being delayed and it being sunny out of all the delayed flight scenarios under any weather?"
 
 ---
-
