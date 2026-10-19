@@ -1,0 +1,49 @@
+- **Events**
+	- Translation to Event Notation ✓
+- **Probability Rules**
+	- 3 Axioms of Probability ✓
+	- Complement Rule ✓
+	- Inclusion-Exclusion Principle ✓
+- **Counting**
+	- Permutations w/ replacement ✓
+	- Permutations w/o replacement ✓
+	- Combinations ✓
+- $P(A) = 1- \frac{|A^c|}{|\Omega|}$ **Method**
+	- If $P(A)$ seems to tedious to compute, just compute $P(A^c)$ by counting outcomes in complement set (this method relies on equally likely outcomes in $\Omega$). ✓
+- **Conditional Probability**
+	- Interpretation ✓
+	- Multiplication Rule ✓
+	- Why do 2 events defined on the same outcome need not be dependent?
+- **Law of Total Probability**
+	- Valid Partition ✓
+- **Bayes' Theorem**
+	- Definition ✓
+	- 1000 cases interpretation
+- **Random Variables**
+	- Definition ✓
+	- Support ✓
+- **Indicators**
+	- Defines $S_X$ in PMF ✓
+- **Independence**
+	- Definition ✓
+	- $P(A|B) = P(A)$ ✓
+	- $P(A)$ or $P(B) = 0$ caveat ✓
+	- Multiplication Rule ✓
+- **PMFs**
+	- Definition ✓
+	- Properties ✓
+	- Recover CDF ✓
+	- Find scaling factor $c$ by writing out sum = 1 ✓
+- **CDFs**
+	- Definition ✓
+	- Properties ✓
+	- Recover PMF ✓
+	- $P(X)$ over Half-Open Interval ✓
+- **Bernoulli Distribution**
+	- Definition ✓
+- **Binomial Distribution**
+	- Pattern Probability ✓
+	- Definition ✓
+	- Rules for Modeling ✓
+	- Case where Binomial Distribution is Not Valid ✓
+		- Make trial $i$ have a different probability of success. 
