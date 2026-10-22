@@ -9,6 +9,16 @@ This principle is telling us that if we can prove the first implication to be a 
 ## Well-Ordering Principle
 ___
 The Well-Ordering Principle (WOP) states that if we have a nonempty set $S$ that is a subset of the naturals $\mathbb{N}$, then that set has a smallest element. To use the Well-Ordering Principle as a proof method, the non-empty set $S$ is usually defined as a subset of $\mathbb{N}$ (thus its elements are all positive integers) such that for each element in $S$, its corresponding indexed statement $P(n)$ is false. The WOP is then invoked to state that $S$ contains some smallest element $l$, and then show that this leads to a contradiction.
+### Steps for Proof by WOP
+1) Let $S$ be a subset of $\mathbb{N}$ of counterexamples of the statement $P(n)$ 
+   e.g. $S=\set{n\in \mathbb{N} \mid P(n) \text{ is false}}$.
+2) For contradiction, state that $S$ must be nonempty i.e. $S \ne \emptyset$.
+3) Invoke the WOP to state that $S$ has a least element $l$.
+4) Check the base case $P(1)$, show that $l\ne1$ and thus $l>1 \implies (l-1) \in \mathbb{N}$.
+5) State that $(l-1) \not\in S$ because $l$ is the least element, then assert that $P(l-1)$ is true.
+6) Now start with the LHS of $P(l)$ and use $P(l-1)$ being true to deduce that $P(l)$ is true.
+7) Since $P(l)$, $l \notin S$ but also from step 3, $l \in S$. Since the assumption that lead to the contradiction was that $S \ne \emptyset$, then $S = \emptyset$.
+8) Conclude $\forall n \in \mathbb{N}$, $P(n)$. 
 ### WOP $\implies$ PMI
 To show that the WOP implies the PMI, we can follow these steps exactly. First, recall the definition of the PMI: $$\left[ P(1) \land P(n) \implies P(n+1)\right] \implies P(m) \space\space\forall m \in \mathbb{N}$$
 Note that saying that $P(n)$ implies $P(n+1)$ is equivalent to saying that $P(n-1)$ implies $P(n)$ if we just shift the indices over (if they are valid in the sense that we are not indexing outside of our index set). 

@@ -41,5 +41,16 @@ On such a collection we can define four operations. Before listing them, always 
 	<u>Iterated Intersection</u> $$x \in \bigcap_A \bigcap_B I_{n,k}\equiv\set{x\mid\forall a\in A, \forall b \in B, x \in I_{n,k}}$$
 	<u>Limit Supremum</u> $$x \in \bigcap_A \bigcup_B I_{n,k}\equiv\set{x \mid \forall a \in A, \exists b \in B : x \in I_{n,k}}$$
 	<u>Limit Inferior</u> $$x \in \bigcup_A \bigcap_B I_{n,k}\equiv\set{x\mid\exists a \in A : \forall b \in B, x \in I_{n,k}}$$
+## Set Exponentiation
+The Cartesian product of two sets is denoted $A \times B$ and the result is a set of ordered pairs with the first coordinate coming from $A$ and the second coming from $B$.
+$$A \times B = \set{(x,y) \mid x \in A, y \in B} $$
+Using the Cartesian product on a set with itself can be denoted $A \times A= A^2$ or
+$A \times A \times \ldots \times A = A^n$. We're familiar with seeing this when talking about coordinate planes such as $\mathbb{R}$, which is the real number line, or $\mathbb{R}^2$ which is the 2D Cartesian (x-y) plane.
 
+Set exponentiation can also be interpreted in a different manner. Consider sets $A,B$. By raising $A$ to the power of $B$, what we are really doing is defining a set of functions from $B$ to $A$.
+$$A^B = \set{f: B \to A \mid \text{f is a function}}$$
+Consider $B = \set{1,2,3}$ and $A = \set{a,b}$. Then a function in the set $A^B$ maps every element in $B$ to a unique element in $A$. But note that for this example, there are only 2 choices for each element in $B$, so there must be $2^3$ possible ways to have different assignments of the elements of $B$ to the elements of $A$. Then an example of a function of $A^B$ is $f_1 = \set{(1,a), (2, a), (3,a)}$ where each input from $B$ is mapped to the same output in $A$. Recall that we raised $A$ to a set of cardinality 3 and that this gave us the total possible ways (i.e. total number of unique functions) to choose an element from $A$ for a single element in $B$. It follows naturally that the size of such a set is
+$|A^B| = |A|^{|B|}$.
+
+Given $\set{0,1}^{\mathbb{N}} = \set{f : \mathbb{N} \to \set{0,1} \mid f \text{ is a f.t.}}$, we can think of having a slot for each element in $\mathbb{N}$, and then filling those slots with elements of $\set{0,1}$ so that each slot is filled. This is the collection of all infinite binary strings.
 ___
