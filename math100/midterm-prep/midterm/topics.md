@@ -19,9 +19,11 @@
 	- $A \cup A^c = U$
 	- $A \cap A^c = \emptyset$
 	- $(A^c)^c = A$
+	- $A^B = \set{f:B \to A \mid f \text{ is a function}}$
 - Cardinality of Finite Sets ✓
 	- $|A \times B| = |A||B|$
 	- $|P(A)| = 2^{|A|}$
+	- $|P(P(A) \times P(B))| = 2^{2^{|A| + |B|}}$
 - Power Set ✓
 	- $P(A) = \set{X \mid X \subseteq A}$
 	- Don't forget the empty set $\emptyset$!!!!!!!!!!!!!!!!!!!!!
@@ -57,7 +59,6 @@
 	  NOTE: It is true that if a poset has strictly greater than 1 element, and there is at least one isolated element in that poset, then that poset has no greatest or least element.
 	- $x \text{ is greatest } \implies x \text{ is maximal}$
 	- $x \text { is least } \implies x \text{ is minimal }$
-
 - Total/Linear Orders ✓
 	- Partial Order + Trichotomy Law (total comparability)
 	- Trichotomy Law: For $x,y \in S, x<y, x=y, \text{ or } x>y$ but only one.
@@ -72,19 +73,20 @@
 	- $\neg(a \le b) = a > b$
 	- $\neg(a \ge b) = a<b$
 - Intersections and Unions of Sets -> Arbitrary $\bigcap$ & $\bigcup$ of Indexed Sets?
-	- For a given sequence of indexed sets, there are two mechanical workflows depending on how the sets are indexed:
-		- $\set{A_n}_{n=1}^{\infty}$ is usually written interval notation (open, closed, or half-open) in HW 2.
-			1) If the sequence is nested and decreasing, $\bigcup A_n = A_1$, or $A_{\text{first index}}$.
-			2) If the sequence is nested and increasing, $\bigcap A_n = A_{\text{first index}}$.
-			3) Use the prior steps if applicable, then follow these steps if $A_n$ is nested:
-				For $\bigcup A_n$, take the limit as $n \to \infty$. This gives you an interval with endpoints $(\lim f(n), \lim g(n))$. If $A_n$ is closed or half-closed, check that the limit boundary value is actually in the interval: $f(n) < \lim f(n) < g(n)$? If not, change the closed bracket to an open bracket.
-				For $\bigcap A_n$, take the limit as $n \to \infty$. If $A_n$ is open, this will likely result in a empty interval $(a,a)$. If $f(n) < a < g(n)$, then $\bigcap A_n = {a}$, else it is the empty set. If $A_n$ is closed, no need to test the boundary value. 
-			4) If $A_n$ is not nested:
-				For $\bigcup A_n$, write out the first few terms of the union and infer the tail-end behavior of the endpoints. For $\bigcap A_n$, write out the first few terms of the intersection and either infer the tail-end behavior of the endpoints directly or evaluate the first few intersections to see if you get $\emptyset$. If you ever get $\emptyset$, then the entire intersection must be $\emptyset$.
-		- $\set{A_k}_{k \in \Lambda}$ is followed by a definition of a sequence of sets, not intervals in HW 2.
-			1) For $\bigcup A_k$, write out the first few terms of the union and infer what the resultant set is. Try to think about what indexing the set by $\Lambda$ really means when performing the union over all of the sets. For example, in problem 8c), we union over all $k \in \mathbb{Z}$ of $\set{k,k+1,\ldots}$, so by inspection this should just be $\mathbb{Z}$. For $\bigcap A_k$, write out the first few terms of the intersection and infer what the resultant set is. For the same problem, we notice that, for each subsequent increment in $k$, we lose the first element from the preceding set, so intersecting over all of $k$ gives us the empty set.
+		- For a given sequence of indexed sets, there are two mechanical workflows depending on how the sets are indexed:
+			- $\set{A_n}_{n=1}^{\infty}$ is usually written interval notation (open, closed, or half-open) in HW 2.
+				1) If the sequence is nested and decreasing, $\bigcup A_n = A_1= A_{\text{first index}}$.
+				2) If the sequence is nested and increasing, $\bigcap A_n = A_{\text{first index}}$.
+				3) Use the prior steps if applicable, then follow these steps if $A_n$ is nested:
+						For $\bigcup A_n$, take the limit as $n \to \infty$. This gives you an interval with endpoints $(\lim f(n), \lim g(n))$. If $A_n$ is closed or half-closed, check that the limit boundary value is actually in the interval: $f(n) < \lim f(n) < g(n)$? If not, change the closed bracket to an open bracket.
+					For $\bigcap A_n$, take the limit as $n \to \infty$. If $A_n$ is open, this will likely result in a empty interval $(a,a)$. If $f(n) < a < g(n)$, then $\bigcap A_n = {a}$, else it is the empty set. If $A_n$ is closed, no need to test the boundary value. 
+				4) If $A_n$ is not nested:
+					For $\bigcup A_n$, write out the first few terms of the union and infer the tail-end behavior of the endpoints. For $\bigcap A_n$, write out the first few terms of the intersection and either infer the tail-end behavior of the endpoints directly or evaluate the first few intersections to see if you get $\emptyset$. If you ever get $\emptyset$, then the entire intersection must be $\emptyset$.
+			- $\set{A_k}_{k \in \Lambda}$ is followed by a definition of a sequence of sets, not intervals in HW 2.
+				1) For $\bigcup A_k$, write out the first few terms of the union and infer what the resultant set is. Try to think about what indexing the set by $\Lambda$ really means when performing the union over all of the sets. For example, in problem 8c), we union over all $k \in \mathbb{Z}$ of $\set{k,k+1,\ldots}$, so by inspection this should just be $\mathbb{Z}$. For $\bigcap A_k$, write out the first few terms of the intersection and infer what the resultant set is. For the same problem, we notice that, for each subsequent increment in $k$, we lose the first element from the preceding set, so intersecting over all of $k$ gives us the empty set.
 	- Double Arbitrary $\bigcap$ & $\bigcup$ of Indexed Sets ? <- On the exam???
-- Proving Set Inclusions 
+		- Fix the outer indexing variable and apply the above-mentioned workflow to the inner operation, then infer what taking the outer operation results in.
+- Proving Set Inclusions ✓
 	- Let $x \in S$, use the property defining $x\in S$ to show that $x\in T$, conclude $S \subseteq T$.
 	- $S=T \iff (S \subseteq T) \land (T \subseteq S)$
 - Proof by Contrapositive ✓
