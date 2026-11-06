@@ -1,13 +1,13 @@
 ## Relations
 ___
-A relation is a subset of the Cartesian product of two sets; $R := A \times B$. For example, if $A=\set{1,2,3}$ and $B = \set{a,b}$, then a relation could be defined as $R = \set{(1,a), (2,a), (3,b)}$.
+A relation is a subset of the Cartesian product of two sets; $R = \set{(a,b) \in A \times B}$. For example, if $A=\set{1,2,3}$ and $B = \set{a,b}$, then a relation could be defined as $R = \set{(1,a), (2,a), (3,b)}$.
 
 However, we are more often concerned with relations that are defined on a single set. When we have $R:= A \times A$, we call this a *relation on A*. We see these types of relations when dealing with functions that map from $\mathbb{R}$ to $\mathbb{R}$, that is, $f : \mathbb{R} \mapsto \mathbb{R}$ is a relation on $\mathbb{R}$. For these types of relations, we define the following properties: 
 
 >[!abstract] Properties of Relations
 >For relation $R$ on set $A$ and $a,b,c \in A,$
 ><u>**Reflexive**</u>
->$$R \text{ is reflexive} \iff aRa $$
+>$$R \text{ is reflexive} \iff \forall a \in A, aRa $$
 >Every element in $A$ relates to itself by $R$.
 ><u>**Symmetric**</u>
 >$$R \text{ is symmetric} \iff (aRa \implies bRa)$$
@@ -67,4 +67,4 @@ Set $S$ is well-ordered by $\le$ if every nonempty subset of $S$ has a least ele
 
 ## Equivalence Relations
 ---
-An equivalence relation is a relation 
+ 

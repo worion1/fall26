@@ -2,7 +2,7 @@
 ___
 The Principle of Strong Induction is given symbolically as follows:
 $$\left(P(1) \land \left[\bigwedge^n_{k=1}P(k) \implies P(n+1) \right]\right) \implies \forall m \in \mathbb{N}, P(m)$$
-The main difference between normal (or weak) induction and strong induction is the assumptions made in the inductive hypothesis. In normal induction, the induction hypothesis is that $P(n)$ is true while in strong induction, assuming the hypothesis assumes that $P(k)$ is true for all $1 \le k \le n$ after proving the base case $P(1)$.
+The main difference between normal (or weak) induction and strong induction is the assumptions made in the inductive hypothesis. In normal induction, the induction hypothesis is that $P(n)$ is true. In strong induction, assuming the hypothesis assumes that $P(k)$ is true for all $1 \le k \le n$ after proving the base case $P(1)$.
 
 Consider the Fibonacci sequence, defined by its recurrence relation:
 $$F_n = F_{n-1} + F_{n-2}$$
@@ -10,7 +10,7 @@ Notice that the $n$th Fibonacci number depends on the two that come before it. I
 ## Descending Chain Condition
 ___
 The Descending Chain Condition (DCC) states that there are no infinite descending chains in the naturals, that is, every descending chain must converge to a constant or 0. 
-$$n_1 > n_2 > n_3 > \ldots \implies \exists k \in \mathbb{N}, \underbrace{n_{k} = n_{k+1} = n_{k+1} = \ldots}_{\text{terms converge to a value}} \text{ or } \underbrace{n_k=0}_{\text{terms converge to 0}}$$
+$$n_1 \ge n_2 \ge n_3 \ge \ldots \implies \exists k \in \mathbb{N}, \underbrace{n_{k} = n_{k+1} = n_{k+2} = \ldots}_{\text{terms converge to a value}} \text{ or } \underbrace{n_k=0}_{\text{terms converge to 0}}$$
 An example of where the DCC can be used is when trying to show that the Euclidean Algorithm terminates after performing the Division Algorithm an arbitrary number of times. For reference, this is the Division Algorithm:
 $$ \forall a, b \in \mathbb{N}, \exists q, r \in \mathbb{N} \text{ s.t. } b=qa+r, \space r<a$$
 In other words, if we $b$ by $a$, we expect two things in the result: a quotient ($q$) and a remainder ($r$) such that $\frac{b}{a} = q + \frac{r}{a}$. Since the remainder is the amount of $b$ left over after dividing wholly by $a$, multiplying both sides by $a$ gives us: $b = qa + r$.

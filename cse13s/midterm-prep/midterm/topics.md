@@ -1,4 +1,4 @@
-### Pass-by-Value vs. Pass-by-Reference
+	### Pass-by-Value vs. Pass-by-Reference
 Pass by value is the convention used in C which dictates that passing a variable as an argument to a function creates a completely isolated copy for the function to use, modify, etc. For example:
 ```C
 int add_ten_to_num(int x) {
@@ -39,12 +39,12 @@ int *p = &a;
 
 // Ex1:
 p++; // equivalent to p = p + 1; p = p + 1 * (sizeof(*p)).
-	 // *p  is of type int (4 bytes), so we increment 
+	 // *p points to a varaible of type int (4 bytes), so we increment 
 	 // where p is pointing to by 4 bytes.
 	 
 // Ex2:
-(*p)++; // this goes to the address that p is pointing at via
-		// the * dereference operator, which is a, and then 
+(*p)++; // this goes to the address that p is pointing at (via
+		// the * dereference operator), which is a, and then 
 		// increments the values of a by 1, resulting in a=101.
 ```
 ___
