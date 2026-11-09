@@ -64,7 +64,4 @@ Take a look at the poset $(\mathcal{P}(\set{1,2,3}),\subset)$ once again and not
 ![[Pasted image 20261030105411.png|573\center|550]]
 ### Well Orders
 Set $S$ is well-ordered by $\le$ if every nonempty subset of $S$ has a least element e.g. $(\mathbb{N}, \le)$.
-
-## Equivalence Relations
----
- 
+___

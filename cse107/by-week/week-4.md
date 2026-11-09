@@ -45,7 +45,7 @@ If we fix $X=x$, then the possible outcomes are limited to all of the pair outco
 These are called the *marginal distributions*, where we're able to recover the PMFs for some fixed $X$ or $Y$ by summing over the joint probabilities for some $X$ or $Y$. If we represent a joint distribution table as a table with cells $p_{X,Y}(x,y)$, this corresponds to selecting (fixing) a row or column, and then adding up all of the joint probabilities in that selection.
 ### Conditional Joint Probability Distributions
 If we fix $X$ and have $P_X(x) > 0$, then we define conditional probability on $X$ of $Y$ as:
-$$p_{Y\mid X} (y\mid x) = P(Y=y\mid X=x) = \frac{P_{X,y}(x,y)}{P_X(x)}$$
+$$p_{Y\mid X} (y\mid x) = P(Y=y\mid X=x) = \frac{P_{X,Y}(x,y)}{P_X(x)}$$
 Recall that this formula is identical to conditional probability for events except that this can be defined as a distribution over all possible values of $y$.
 
 We can use the multiplication rule to rewrite this as:
