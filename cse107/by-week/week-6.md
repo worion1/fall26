@@ -42,7 +42,7 @@ $$\mathbb{E}[g(X,Y)] = \underset{S_{X,Y}}{\iint} g(x,y)f_{X,Y}(x,y)dA$$
 where $f_{X,Y}(x,y)$ is the joint PDF.
 
 If $g(X,Y) = h(X)p(Y)$, then:
-$$ X \perp Y \implies \mathbb{E}[h(X)p(Y)] = \mathbb{E}[h(X)] \mathbb{E}[p(Y)]$$ where $X \perp Y$ means "$X$ and $Y$ are independent."
+$$ X \perp Y \implies \mathbb{E}[h(X)p(Y)] = \mathbb{E}[h(X)] \mathbb{E}[p(Y)] \implies \text{Cov}(X,Y) = 0$$ where $X \perp Y$ means "$X$ and $Y$ are independent."
 ### Correlation
 Giving us a direct measure of the strength of the  linear relationship between $X,Y$, we define the correlation of $X$ and $Y$ as:
 $$ \rho_{X,Y}=\frac{\text{Cov}(X,Y)}{\text{SD}(X)\text{SD}(Y)}$$

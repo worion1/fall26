@@ -34,7 +34,7 @@ $$\phi(z) = \frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}}$$
 and CDF:
 $$ \Phi(z) = P(Z \le z) = \int_{-\infty}^z\phi(u)du$$
 Consequently,
-$$P(a<Z,B) = \Phi(b) - \Phi(a)$$
+$$P(a<Z<B) = \Phi(b) - \Phi(a)$$
 ## Joint Density Functions
 ---
 Define a joint density function of continuous random variables $X$ and $Y$ as $f_{X,Y}(x,y)$. Then instead of thinking of the object that we are integrating over as a curve, it is now a surface. So integrating over an region gives us a volume that represents some positive probability. Then, a rectangle going from the 2D support to the function height has dimensions $h: f_{X,Y}(x,y), w: \Delta x, l: \Delta y$. So an approximation of the total volume under the surface using many of these small rectangles is:
@@ -49,4 +49,6 @@ $$P((X,Y) \in A) = \int_{S \cap A} f_{X,Y}(x,y)dA$$
 Similar to how we recovered the marginals for a discrete joint probability distribution, we fix one variable and sum over all of the possible values of the other variable:
 $$f_X(x) = \int_{-\infty}^{\infty}f_{X,Y}(x,y)dy \\ \ \\ f_Y(y) = \int^{\infty}_{-\infty} f_{X,Y}(x,y)dx$$
 Note that the limits of integration can be replaced with the support of the integrating variable for that fixed interval. That is, if we have $S_{X,Y} = [0,1] \times [0,1]$ and we fix $x=0$ to get $f_X(0)$, then we draw a line along every possible $y$ value along $x=0$. In this case, the limits would be $0$ to $1$.
+
+When we do this, we scan over the 3D joint density and keep a catalog of all $y$ values for which a function $f_Y(y)$ holds. i.e. we're finding the weight of the slice at $y$. If the limits of $x$ change, the rule for $f_y(y)$ will change, so we need to compute a different integral with adjusted limits. 
 ___

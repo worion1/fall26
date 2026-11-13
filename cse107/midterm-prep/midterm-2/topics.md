@@ -1,0 +1,104 @@
+<u> discrete random variables </u>
+- expected value
+	- formula ✓
+- variance
+	- formula ✓
+	- alternative (practical) formula ✓
+	- formula for standard deviation ✓
+	- formula for variance of linear combination of $X$ ✓
+	- formula for SD of linear combination of $X$ ✓
+- joint probability distributions
+	- recover joint with $p_{A,B}(a,b) = p_{A|B}(a|b)p_B(b)$
+	- recover marginals
+- conditional probability distributions
+	- recover conditional with $p_{A|B}(a|b) = \frac{p_{A,B}(a,b)}{p_B(b)}$
+	- find $p_{R|S}(r|S \in A)$
+		- if $S_{R,S}$ is rectangular, then sum over $p_{R,S}(r,S \in A)$ in numerator and divide by $p_S(S \in A)$.
+			- if $S_{R,S}$ is nonrectangular (choice of $r$ limits valid values of $s$), define piecewise by summing over valid values of $s$ for each $r$ in the numerator and divide by $p_S(S \in A)$.
+	- recover marginals w/ multiplication rule
+	- independence
+
+
+<u> continuous random variables </u>
+- PDFs
+	-  Valid PDF
+	- Interpretation of area under PDF as probability
+	- Normalizing PDF
+- CDFs
+	- $F_X(t) = P(X \le t) = \int^t_{-\infty}f_X(u)du$
+	- $P(a < X < b) = \int^b_a f_X(x)dx = F_X(b) - F_X(a)$
+		- Doesn't have to be in the form $a < X \le b$ anymore!
+		- $X \sim \text{Unif}(a,b) \implies F_X(x) = \frac{x-a}{b-a}$ in the support; *consider other regions*
+- expected value
+	- formula ✓
+	- for cts random variables, expected value must always lie in the support
+	- LOTUS for $g(X)$ ✓
+	- $X \sim \text{Unif}(a,b) \implies \mathbb{E}[X] = \frac{a+b}{2}$ ✓
+- variance
+	- variance of linear combination formula ✓
+	- $X \sim \text{Unif}(a,b) \implies \text{Var}(X) = \frac{(b-a)^2}{12}$ ✓
+- exponential distribution $T \sim \text{Exp}(\lambda)$
+	- PDF formula (and domain) ✓
+	- CDF formula ✓
+	- expected value formula ✓
+	- second moment formula ✓
+	- variance formula ✓
+	- SD formula ✓
+	- memorylessness
+- normal distribution $X \sim \mathcal{N}(\mu, \sigma^2)$
+	- non-standard PDF (note that domain is all reals) ✓
+	- standard PDF (for $X \sim \mathcal{N}(\mu, \sigma^2)$) ✓
+	- standard CDF ✓
+	- standardization formula ✓
+- continuous joint PDFs
+	- $P((X,Y) \in A)$
+		- formula
+	- recover marginals
+		- formulae
+		- deploy horizontal/vertical line segments, if the limits change, split the integral and define the marginal as a piecewise.
+	- $X,Y$ independence
+- continuous conditional PDFs
+	- formulae for $f_{X|Y}(x|y)$ and $f_{Y|X}(y|x)$
+	- recover marginals with multiplication rule
+	- why *do we* divide by $f_X(x)$ (or $f_Y(y)$) 
+	- why *can we* divide by $f_X(x)$ (or $f_Y(y)$) even though $P(X=x)=P(Y=y)=0$ for cts r.v's.
+	- independence
+		- if $f_{Y|X}(y|x)$ has a variable support (such as $1 < y < x$), then its support varies with $x$. When the support changes, it gives us more information about the possible values of $Y$, which makes $X,Y$ dependent.
+- conditional expected value
+	- formulae for $\mathbb{E}[X|Y=y]$ and $\mathbb{E}[Y|X=x]$
+		- conditioning on $X$ yields a function of $x$ and conditioning on $Y$ yields a function of $y$.
+	- for discrete $A,B$ formulae for $\mathbb{E}[A|B=b]$ and reverse
+- covariance
+	- formula and range
+	- alternative (practical) formula
+	- $\text{Cov}(X + a, Y + b) = \text{Cov}(X,Y)$ because adding reals $a$ and $b$ just shift the mean and don't affect the spread of either random variable
+	- LOTUS for expected value of $g(X,Y)$
+	- interpretations of covariance being positive, zero, and negative
+	- $X \perp Y \implies \text{Cov}(X,Y) = 0$
+- correlation
+	- formula and range
+	- unitless
+	- interpretations of correlation being positive, zero, and negative
+	- $X \perp Y \implies \rho_{X,Y} = 0$
+- For $X_1, \ldots, X_n$ with each $X_i$ i.i.d, mean $\mu$, variance $\sigma^2$
+	- $S_n$
+		- definition ✓
+		- mean ✓
+		- variance ✓
+		- SD ✓
+	- $\bar{X}_n$
+		- definition ✓
+		- mean✓ 
+		- variance ✓
+		- SD ✓
+		- changing $n$ has no effect on $\sigma^2$ of each $X_i$ ✓
+		- if $X_i = X_1$, then $\text{Var}(\bar{X}_n)$ is just $\sigma^2$. ✓
+- For $K_n$ as a sum of $n$ i.i.d Bernoulli observations,
+	- $K_n \sim \text{Bin}(n,p)$ ✓
+	- mean ✓
+	- variance ✓
+	- $\frac{K_n}{n}$ is the proportion
+		- mean ✓
+		- variance ✓
+- finding pdf of transformation of a random variable
+	- 
