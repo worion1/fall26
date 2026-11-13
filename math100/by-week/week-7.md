@@ -18,3 +18,17 @@ $$
 
 
 ### Function Properties
+
+*Injective*
+Algebraic def (& contrapositive)
+Preimage def
+HLT
+
+*Surjective*
+Algebraic def
+Image def
+
+*Bijective*
+
+
+### Inverse Functions

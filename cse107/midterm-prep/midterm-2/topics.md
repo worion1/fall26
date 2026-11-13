@@ -101,4 +101,47 @@
 		- mean ✓
 		- variance ✓
 - finding pdf of transformation of a random variable
-	- 
+	- For transformation $g(X)$ such that $Y = g(X)$ given $S_X = (a,b)$. 
+		0) If not given, compute $F_X(x)$ by known distribution or integrating given $f_X(x)$.
+		1) From $S_X$, deduce $S_Y$. 
+			- 1a) *Easiest case*: If $g(x)$ is monotonic ($g'(x) >0$ or $g'(x) < 0$) and continuous over $S_X$,  then $S_Y = (\lim_{x\to a}g(x), \lim_{x\to b}g(x))$. Otherwise,
+
+			- 1b) If $g(x)$ is not monotonic over $S_X$, then find these three values: $g(a)$ *lower boundary, $g(b)$ *upper boundary*, and $g(x_c)$ *local extrema* 
+				(find by solving $g'(x) = 0$). For these values, if no other values lie between the minimum and maximum of them, then there are no interior thresholds. Else, every value in between the minimum and maximum are interior thresholds. 
+
+				Alternatively, you can sketch the function $g(x)$ over $S_X$ and note the point(s) where the probability accumulation stops being symmetric (if it does). These point(s) (y value(s)) are the interior threshold(s).
+				
+				Note this interior threshold and move to step 2). Otherwise,
+
+			- 1c) If $g(x)$ has a singularity within the support of $S_X$, consider what happens to $g(x)$ as it approaches that singularity. It will diverge, so break up the support into a union of the left of the singularity and the right of the singularity (if the right exists). e.g. If $g(x) = \frac{1}{x}$ and $S_X = (-1,2)$, then $S_Y = (-\infty, -1)\cup(\frac{1}{2},\infty)$. Otherwise,
+
+			- 1d) If $S_X$ is disjoint (e.g. $S_X = (-1, 0) \cup (2, 3)$), each part of $S_X$ maps to parts of $S_Y$. Consider that $Y = X^2$. Then $(-1,0) \in S_X$ maps to $(0,1) \in S_Y$ and $(2,3) \in S_X$ maps to $(4,9) \in S_Y)$. Thus $S_Y = (0,1) \cup (4,9)$.
+
+		2) Solve the event $\set{Y=g(X) \le y}$ for $X$.
+			2a) For fully connected $S_Y$ (case 1a).
+			 - i) Write $\set{g(X) \le y}$.
+			 - ii) Manipulate this inequality to solve for $X$, keeping in mind that multiplying or dividing an inequality by a negative number flips the direction. If you want to multiply both sides by an expression containing $X$, consider $S_X$ to consider if the expression must be positive or negative. e.g. from HW5 problem 8c, multiplying by (1-X) multiplies by a positive number for $0<X<1$. From Midterm Prep problem 4a, $|1-U|$ simplifies to $1-U$ as $1-U > 0$ for 
+			   $S_U = (0,1)$.
+			   - iii) Result should be in the form $\set{X \le f(y)}$, $\set{X \ge f(y)}$, or
+			   $\set{|X| \le f(y)} = \set{-f(y) \le X \le f(y)}$.
+			2b) For case 1b)
+
+		3) Write $F_Y(y)$ in terms of $F_X(x)$.
+			3a) For fully connected $S_Y$.
+			- i) Write $F_Y(y) = P(Y \le y)$ and substitute for whatever you found in step 2.
+			- ii) Use these rules to rewrite as an expression in $F_X(x)$: $P(X \le f(y)) = F_X(f(y))$  $P(X \ge f(y)) = 1 - F_X(f(y))$, and $P(g(y) < X < f(y)) = F_X(f(y)) - F_X(g(y))$ for $g(y) < f(y)$. Note that the strictness of the inequalities are not significant here.
+			- iii) Invoke the rule for $F_X(\text{something})$ that you found in step 0 to have an expression in $y$. Notably for $X \sim \text{Unif}(0,1)$, you just rewrite the argument of the $F_X(x)$.
+			3b) For case 2b)
+			
+		4) Complete $F_Y(y)$ as piecewise, considering $S_Y$:
+			4a) For fully connected $S_Y$
+			- i) This should just be one piecewise $F_Y(y)$. Let $S_Y = (a,b)$ WLOG, then: $$F_Y(y) = \begin{cases} 0, & y \le a, \\ F_Y(y), & a < y < b, \\ 1, & y \ge b.\end{cases}$$
+			4b) For case 3b)
+			
+		5) Find $f_Y(y) = F_Y'(y)$.
+			5a) For fully connected $S_Y$ / singular $F_Y(y)$:
+			- i) Differentiate the singular $F_Y(y)$ that you found. Rewrite $f_Y(y)$ to be piecewise to consider that $f_Y(y) = 0$ outside of $S_Y$. $$ f_Y(y) = \begin{cases}F'_Y(y), & y \in S_Y, \\ 0, & \text{otherwise.} \end{cases}$$
+			5b) For case 4b)
+		
+			
+			
